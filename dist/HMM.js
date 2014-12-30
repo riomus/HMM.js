@@ -155,11 +155,155 @@ var HMM = function(providedConfig){
   };
 
 // Version.
-HMM.VERSION = '0.0.0';
+HMM.VERSION = '0.0.1';
 
 
 // Export to the root, which is probably `window`.
 root.HMM = HMM;
+
+
+
+var ContinousHMM = function(providedConfig){
+    this.config={
+      standardHiddenMarkovModel:HMM,
+      minimalProbabilityFactor:0.95
+    };
+
+    for (var attrname in providedConfig)  {
+        this.config[attrname] = providedConfig[attrname];
+    }
+
+    this.standardHiddenMarkovModel=new this.config.standardHiddenMarkovModel(this.config);
+    var measuringObservations=[];
+    var detectCallback=[];
+
+    this.calculatePath=function(observations){
+      return this.standardHiddenMarkovModel.calculatePath(observations);
+    };
+
+    this.newSymbol=function(symbol){
+      measuringObservations.push([]);
+      measuringObservations.forEach(function(observation){
+        observation.push(symbol);
+      }.bind(this));
+      var foundMatch=false;
+      measuringObservations=measuringObservations.filter(function(observation){
+        var measuredProbability=this.calculatePath(observation);
+        if(observation.length>=this.averageObservationLength&&!foundMatch){
+          if(measuredProbability[0]>this.averageProbability*this.config.minimalProbabilityFactor){
+            foundMatch=true;
+            detectCallback.forEach(function(callback){
+            callback(measuredProbability);
+            });
+
+          }
+        }
+        if(measuredProbability[0]<this.averageProbability*this.config.minimalProbabilityFactor){
+          return false;
+        }
+        return !foundMatch;
+      }.bind(this));
+    };
+
+    this.onDetect=function(callback){
+      detectCallback.push(callback);
+    };
+
+    this.reset=function(){
+      measuringObservations=[];
+    };
+
+
+    this.teach=function(observations){
+      this.averageObservationLength=observations.reduce(function(r,observation){return Math.min(r,observation.length);},9999999999);
+      this.standardHiddenMarkovModel.teach(observations);
+      this.averageProbability=observations.map(function(observation){return this.calculatePath(observation);}.bind(this))
+      .map(function(path){return path[0];}).reduce(function(r,prob){return Math.min(r,prob);},15);
+    };
+
+    this.initializeDefaultProbabilities=function(){
+      this.standardHiddenMarkovModel.initializeDefaultProbabilities();
+    };
+    this.initializeDiagonalProbabilities=function(){
+      this.standardHiddenMarkovModel.initializeDiagonalProbabilities();
+
+    };
+
+    this.createProbabilitiesMatix=function(defaultTransitionProbability,defaultEmissionProbability){
+      this.standardHiddenMarkovModel.initializeDiagonalProbabilities(defaultTransitionProbability,defaultEmissionProbability);
+    };
+
+  };
+
+// Version.
+ContinousHMM.VERSION = '0.0.1';
+
+
+// Export to the root, which is probably `window`.
+root.ContinousHMM = ContinousHMM;
+
+
+
+var MultiGeastureHMM = function(providedConfig){
+    this.config={
+      singularModel:ContinousHMM,
+      modelInitializer:function(model){
+        model.initializeDiagonalProbabilities();}
+    };
+
+    for (var attrname in providedConfig)  {
+        this.config[attrname] = providedConfig[attrname];
+    }
+
+    var geasturesModels={};
+    var geasturesNames=[];
+    var globalCallbacks=[];
+
+    var resetAllModels = function(){
+      geasturesNames.forEach(function(geastureName){geasturesModels[geastureName].reset();});
+    };
+    this.calculatePath=function(observations){
+      return this.standardHiddenMarkovModel.calculatePath(observations);
+    };
+
+    this.newSymbol=function(symbol){
+      geasturesNames.forEach(function(geastureName){geasturesModels[geastureName].newSymbol(symbol);});
+    };
+
+    this.onDetect=function(callback,geasture){
+      if(geasture){
+        geasturesModels[geasture].onDetect(callback);
+      }else{
+        geasturesNames.forEach(function(geastureName){
+          geasturesModels[geastureName].onDetect(function(data){
+            callback({'name':geastureName,'data':data});
+          });
+        });
+        globalCallbacks.push(callback);
+      }
+
+    };
+
+    this.teach=function(geasture,observations){
+      var model=new this.config.singularModel(this.config);
+      this.config.modelInitializer(model);
+      model.teach(observations);
+      geasturesModels[geasture]=model;
+      geasturesNames.push(geasture);
+      model.onDetect(resetAllModels);
+
+      globalCallbacks.forEach(function(callback){
+        model.onDetect(function(data){callback({'name':geasture,'data':data});});
+      });
+    };
+  };
+
+// Version.
+MultiGeastureHMM.VERSION = '0.0.1';
+
+
+// Export to the root, which is probably `window`.
+root.MultiGeastureHMM = MultiGeastureHMM;
 
 
 }(this));
