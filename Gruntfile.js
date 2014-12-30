@@ -13,7 +13,7 @@ module.exports = function(grunt) {
           'src/_intro.js',
           'src/hmm.js',
           'src/continousHmm.js',
-          'src/multiGeastureHMM.js',
+          'src/multiGestureHMM.js',
           'src/_outro.js'
         ],
         dest: 'dist/<%= pkg.name.replace(".js", "") %>.js'

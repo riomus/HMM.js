@@ -244,7 +244,7 @@ root.ContinousHMM = ContinousHMM;
 
 
 
-var MultiGeastureHMM = function(providedConfig){
+var MultiGestureHMM = function(providedConfig){
     this.config={
       singularModel:ContinousHMM,
       modelInitializer:function(model){
@@ -299,11 +299,11 @@ var MultiGeastureHMM = function(providedConfig){
   };
 
 // Version.
-MultiGeastureHMM.VERSION = '0.0.1';
+MultiGestureHMM.VERSION = '0.0.1';
 
 
 // Export to the root, which is probably `window`.
-root.MultiGeastureHMM = MultiGeastureHMM;
+root.MultiGestureHMM = MultiGestureHMM;
 
 
 }(this));
