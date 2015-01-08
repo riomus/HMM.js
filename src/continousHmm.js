@@ -52,10 +52,10 @@ var ContinousHMM = function(providedConfig){
 
 
     this.teach=function(observations){
-      this.averageObservationLength=observations.reduce(function(r,observation){return Math.min(r,observation.length);},99999);
+      this.averageObservationLength=observations.reduce(function(r,observation){return r+observation.length;},0)/observations.length;
       this.standardHiddenMarkovModel.teach(observations);
       this.averageProbability=observations.map(function(observation){return this.calculatePath(observation);}.bind(this))
-      .map(function(path){return path[0];}).reduce(function(r,prob){return Math.min(r,prob);},99999);
+      .map(function(path){return path[0];}).reduce(function(r,prob){return r+prob;},0)/observations.length;
     };
 
     this.initializeDefaultProbabilities=function(){
@@ -73,7 +73,7 @@ var ContinousHMM = function(providedConfig){
   };
 
 // Version.
-ContinousHMM.VERSION = '0.0.4';
+ContinousHMM.VERSION = '0.0.5';
 
 
 // Export to the root, which is probably `window`.
