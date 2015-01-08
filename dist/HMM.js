@@ -13,7 +13,7 @@ var HMM = function(providedConfig){
       transitionProbabilities:{},
       emissionProbabilities:{},
       startProbability:{},
-      matchFactor:0.5
+      matchFactor:0.05
     };
 
     for (var attrname in providedConfig)  {
@@ -37,7 +37,7 @@ var HMM = function(providedConfig){
       return diff<matchFactor;
     };
 
-    var zeroReturningFunction=function(){return 0e-30;};
+    var zeroReturningFunction=function(){return 0;};
 
     this.calculatePath=function(observations){
       var observationsClone=observations.slice(0);
@@ -157,7 +157,7 @@ var HMM = function(providedConfig){
   };
 
 // Version.
-HMM.VERSION = '0.0.3';
+HMM.VERSION = '0.0.4';
 
 
 // Export to the root, which is probably `window`.
@@ -239,7 +239,7 @@ var ContinousHMM = function(providedConfig){
   };
 
 // Version.
-ContinousHMM.VERSION = '0.0.3';
+ContinousHMM.VERSION = '0.0.4';
 
 
 // Export to the root, which is probably `window`.
@@ -303,7 +303,7 @@ var MultiGestureHMM = function(providedConfig){
 };
 
 // Version.
-MultiGestureHMM.VERSION = '0.0.3';
+MultiGestureHMM.VERSION = '0.0.4';
 
 
 // Export to the root, which is probably `window`.

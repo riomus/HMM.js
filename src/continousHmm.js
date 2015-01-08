@@ -73,7 +73,7 @@ var ContinousHMM = function(providedConfig){
   };
 
 // Version.
-ContinousHMM.VERSION = '0.0.3';
+ContinousHMM.VERSION = '0.0.4';
 
 
 // Export to the root, which is probably `window`.
