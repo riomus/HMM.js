@@ -59,10 +59,10 @@ var HMM = function(providedConfig){
         }.bind(this));
         path=newPath;
       }.bind(this));
-      var maximalPath=[0,undefined];
+      var maximalPath=[-1,undefined];
       forEachState(function(state){
         var fromCacheValue=viterbiCache[observationsClone.length][state];
-        if(maximalPath[0]<=fromCacheValue){
+        if(maximalPath[0]<fromCacheValue){
           maximalPath=[fromCacheValue,state];
         }
       }.bind(this));
