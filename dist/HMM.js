@@ -13,7 +13,7 @@ var HMM = function(providedConfig){
       transitionProbabilities:{},
       emissionProbabilities:{},
       startProbability:{},
-      matchFactor:0.01
+      matchFactor:0.5
     };
 
     for (var attrname in providedConfig)  {
@@ -37,7 +37,7 @@ var HMM = function(providedConfig){
       return diff<matchFactor;
     };
 
-    var zeroReturningFunction=function(){return 0;};
+    var zeroReturningFunction=function(){return 0e-30;};
 
     this.calculatePath=function(observations){
       var observationsClone=observations.slice(0);
@@ -157,7 +157,7 @@ var HMM = function(providedConfig){
   };
 
 // Version.
-HMM.VERSION = '0.0.2';
+HMM.VERSION = '0.0.3';
 
 
 // Export to the root, which is probably `window`.
@@ -168,7 +168,8 @@ root.HMM = HMM;
 var ContinousHMM = function(providedConfig){
     this.config={
       standardHiddenMarkovModel:HMM,
-      minimalProbabilityFactor:0.95
+      minimalProbabilityFactor:0.95,
+      minimalLengthFactor:0.95
     };
 
     for (var attrname in providedConfig)  {
@@ -191,7 +192,7 @@ var ContinousHMM = function(providedConfig){
       var foundMatch=false;
       measuringObservations=measuringObservations.filter(function(observation){
         var measuredProbability=this.calculatePath(observation);
-        if(observation.length>=this.averageObservationLength&&!foundMatch){
+        if(observation.length>=this.averageObservationLength*this.config.minimalLengthFactor&&!foundMatch){
           if(measuredProbability[0]>this.averageProbability*this.config.minimalProbabilityFactor){
             foundMatch=true;
             detectCallback.forEach(function(callback){
@@ -217,10 +218,10 @@ var ContinousHMM = function(providedConfig){
 
 
     this.teach=function(observations){
-      this.averageObservationLength=observations.reduce(function(r,observation){return r+observation.length;},0)/observations.length;
+      this.averageObservationLength=observations.reduce(function(r,observation){return Math.min(r,observation.length);},99999);
       this.standardHiddenMarkovModel.teach(observations);
       this.averageProbability=observations.map(function(observation){return this.calculatePath(observation);}.bind(this))
-      .map(function(path){return path[0];}).reduce(function(r,prob){return r+prob;},0)/observations.length;
+      .map(function(path){return path[0];}).reduce(function(r,prob){return Math.min(r,prob);},99999);
     };
 
     this.initializeDefaultProbabilities=function(){
@@ -238,7 +239,7 @@ var ContinousHMM = function(providedConfig){
   };
 
 // Version.
-ContinousHMM.VERSION = '0.0.2';
+ContinousHMM.VERSION = '0.0.3';
 
 
 // Export to the root, which is probably `window`.
@@ -302,7 +303,7 @@ var MultiGestureHMM = function(providedConfig){
 };
 
 // Version.
-MultiGestureHMM.VERSION = '0.0.2';
+MultiGestureHMM.VERSION = '0.0.3';
 
 
 // Export to the root, which is probably `window`.

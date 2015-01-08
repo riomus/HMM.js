@@ -8,7 +8,7 @@ var HMM = function(providedConfig){
       transitionProbabilities:{},
       emissionProbabilities:{},
       startProbability:{},
-      matchFactor:0.01
+      matchFactor:0.5
     };
 
     for (var attrname in providedConfig)  {
@@ -32,7 +32,7 @@ var HMM = function(providedConfig){
       return diff<matchFactor;
     };
 
-    var zeroReturningFunction=function(){return 0;};
+    var zeroReturningFunction=function(){return 0e-30;};
 
     this.calculatePath=function(observations){
       var observationsClone=observations.slice(0);
@@ -152,7 +152,7 @@ var HMM = function(providedConfig){
   };
 
 // Version.
-HMM.VERSION = '0.0.2';
+HMM.VERSION = '0.0.3';
 
 
 // Export to the root, which is probably `window`.

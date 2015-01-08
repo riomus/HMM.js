@@ -55,7 +55,7 @@ var MultiGestureHMM = function(providedConfig){
 };
 
 // Version.
-MultiGestureHMM.VERSION = '0.0.2';
+MultiGestureHMM.VERSION = '0.0.3';
 
 
 // Export to the root, which is probably `window`.
