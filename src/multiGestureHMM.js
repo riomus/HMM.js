@@ -10,28 +10,30 @@ var MultiGestureHMM = function(providedConfig){
         this.config[attrname] = providedConfig[attrname];
     }
 
-    var geasturesModels={};
-    var geasturesNames=[];
+    var gesturesModels={};
+    var gesturesNames=[];
     var globalCallbacks=[];
 
     var resetAllModels = function(){
-      geasturesNames.forEach(function(geastureName){geasturesModels[geastureName].reset();});
+      gesturesNames.forEach(function(gestureName){gesturesModels[gestureName].reset();});
     };
     this.calculatePath=function(observations){
-      return this.standardHiddenMarkovModel.calculatePath(observations);
+      return this.gesturesNames.map(function(gestureName){
+        return gesturesModels[gestureName].calculatePath(observations);
+      }).reduce(function(reduce,returned){return returned[0]>reduce[0]?returned:reduce;},[-1]);
     };
 
     this.newSymbol=function(symbol){
-      geasturesNames.forEach(function(geastureName){geasturesModels[geastureName].newSymbol(symbol);});
+      gesturesNames.forEach(function(gestureName){gesturesModels[gestureName].newSymbol(symbol);});
     };
 
     this.onDetect=function(callback,geasture){
       if(geasture){
-        geasturesModels[geasture].onDetect(callback);
+        gesturesModels[geasture].onDetect(callback);
       }else{
-        geasturesNames.forEach(function(geastureName){
-          geasturesModels[geastureName].onDetect(function(data){
-            callback({'name':geastureName,'data':data});
+        gesturesNames.forEach(function(gestureName){
+          gesturesModels[gestureName].onDetect(function(data){
+            callback({'name':gestureName,'data':data});
           });
         });
         globalCallbacks.push(callback);
@@ -43,8 +45,8 @@ var MultiGestureHMM = function(providedConfig){
       var model=new this.config.singularModel(this.config);
       this.config.modelInitializer(model);
       model.teach(observations);
-      geasturesModels[geasture]=model;
-      geasturesNames.push(geasture);
+      gesturesModels[geasture]=model;
+      gesturesNames.push(geasture);
       model.onDetect(resetAllModels);
 
       globalCallbacks.forEach(function(callback){
