@@ -6,6 +6,8 @@ HMM implementation absed on Viterbi alghoritms
 
 A JavaScript library by Roman Bartusiak.
 
+Current Version: **[0.0.1](https://github.com/riomus/HMM.js/tree/v0.0.1)**
+
 ## Installation
 
 Using Bower:

@@ -50,7 +50,29 @@ module.exports = function(grunt) {
     watch: {
       files: ['<%= jshint.files %>'],
       tasks: ['concat', 'jshint', 'qunit']
+    },
+    versioner: {
+    options: {
+      bump: true,
+      file: 'package.json',
+      gitAdd: true,
+      gitCommit: false,
+      gitPush: false,
+      gitTag: false,
+      gitPushTag: false,
+      npm: false
+    },
+    default: {
+      files: {
+        './package.json': ['./package.json'],
+        './bower.json': ['./bower.json'],
+        './README.md': ['./README.md'],
+        './src/main.js': ['./src/main.js'],
+        './src/continousHmm.js': ['./src/continousHmm.js'],
+        './src/multiGestureHMM.js': ['./src/multiGestureHMM.js']
+      }
     }
+  }
 
   });
 
@@ -59,7 +81,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-qunit');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-concat');
-
+  grunt.loadNpmTasks('grunt-versioner');
   grunt.registerTask('test', ['jshint', 'qunit']);
   grunt.registerTask('default', ['concat', 'jshint', 'qunit', 'uglify']);
 

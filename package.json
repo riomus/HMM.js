@@ -1,6 +1,6 @@
 {
   "name": "HMM.js",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "main": "dist/HMM.min.js",
   "description": "HMM implementation absed on Viterbi alghoritms",
   "repository": {
@@ -18,6 +18,7 @@
     "grunt-contrib-uglify": "~0.2.4",
     "grunt": "~0.4.1",
     "grunt-contrib-watch": "~0.5.3",
-    "grunt-contrib-qunit": "~0.3.0"
+    "grunt-contrib-qunit": "~0.3.0",
+    "grunt-versioner": "^0.1.7"
   }
 }
