@@ -3,7 +3,7 @@ var MultiGestureHMM = function(providedConfig){
     this.config={
       singularModel:ContinousHMM,
       modelInitializer:function(model){
-        model.initializeDiagonalProbabilities();}
+        model.initializeDefaultProbabilities();}
     };
 
     for (var attrname in providedConfig)  {

@@ -8,7 +8,7 @@ var HMM = function(providedConfig){
       transitionProbabilities:{},
       emissionProbabilities:{},
       startProbability:{},
-      matchFactor:0.5
+      matchFactor:0.01
     };
 
     for (var attrname in providedConfig)  {
@@ -31,6 +31,8 @@ var HMM = function(providedConfig){
       });
       return diff<matchFactor;
     };
+
+    var zeroReturningFunction=function(){return 0;};
 
     this.calculatePath=function(observations){
       var observationsClone=observations.slice(0);
@@ -104,7 +106,7 @@ var HMM = function(providedConfig){
         emissionsCount=0;
         oldEmissionMatrix=this.config.emissionProbabilities;
         oldTransitionMatrix=this.config.transitionProbabilities;
-        this.createProbabilitiesMatix(0,0);
+        this.createProbabilitiesMatix(zeroReturningFunction,zeroReturningFunction);
         internalStates.forEach(calculateMatrixForState);
         forEachState(divideMatrixsByCounts);
       }
@@ -112,7 +114,7 @@ var HMM = function(providedConfig){
     };
 
     this.initializeDefaultProbabilities=function(){
-      this.createProbabilitiesMatix(Math.random(),Math.random());
+      this.createProbabilitiesMatix(Math.random,Math.random);
     };
     this.initializeDiagonalProbabilities=function(){
       forEachState(function(state1,index){
@@ -131,17 +133,17 @@ var HMM = function(providedConfig){
       }.bind(this));
     };
 
-    this.createProbabilitiesMatix=function(defaultTransitionProbability,defaultEmissionProbability){
+    this.createProbabilitiesMatix=function(defaultTransitionProbabilityProvider,defaultEmissionProbabilityProvider){
       forEachState(function(state1){
         this.config.transitionProbabilities[state1]={};
         this.config.emissionProbabilities[state1]={};
 
         forEachState(function(state2){
-          this.config.transitionProbabilities[state1][state2]=defaultTransitionProbability;
+          this.config.transitionProbabilities[state1][state2]=defaultTransitionProbabilityProvider();
         }.bind(this));
 
         this.config.symbols.forEach(function(symbol){
-          this.config.emissionProbabilities[state1][symbol]=defaultEmissionProbability;
+          this.config.emissionProbabilities[state1][symbol]=defaultEmissionProbabilityProvider();
         }.bind(this));
 
       }.bind(this));
