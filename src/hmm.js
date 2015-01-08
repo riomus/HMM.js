@@ -152,7 +152,7 @@ var HMM = function(providedConfig){
   };
 
 // Version.
-HMM.VERSION = '0.0.1';
+HMM.VERSION = '0.0.2';
 
 
 // Export to the root, which is probably `window`.

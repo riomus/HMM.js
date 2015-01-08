@@ -157,7 +157,7 @@ var HMM = function(providedConfig){
   };
 
 // Version.
-HMM.VERSION = '0.0.1';
+HMM.VERSION = '0.0.2';
 
 
 // Export to the root, which is probably `window`.
@@ -238,7 +238,7 @@ var ContinousHMM = function(providedConfig){
   };
 
 // Version.
-ContinousHMM.VERSION = '0.0.1';
+ContinousHMM.VERSION = '0.0.2';
 
 
 // Export to the root, which is probably `window`.
@@ -261,7 +261,7 @@ var MultiGestureHMM = function(providedConfig){
     var gesturesNames=[];
     var globalCallbacks=[];
 
-    var resetAllModels = function(){
+    this.reset = function(){
       gesturesNames.forEach(function(gestureName){gesturesModels[gestureName].reset();});
     };
 
@@ -295,8 +295,6 @@ var MultiGestureHMM = function(providedConfig){
     model.teach(observations);
     gesturesModels[geasture]=model;
     gesturesNames.push(geasture);
-    model.onDetect(resetAllModels);
-
     globalCallbacks.forEach(function(callback){
       model.onDetect(function(data){callback({'name':geasture,'data':data});});
     });
@@ -304,7 +302,7 @@ var MultiGestureHMM = function(providedConfig){
 };
 
 // Version.
-MultiGestureHMM.VERSION = '0.0.1';
+MultiGestureHMM.VERSION = '0.0.2';
 
 
 // Export to the root, which is probably `window`.

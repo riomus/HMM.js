@@ -1,6 +1,6 @@
 {
   "name": "HMM.js",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "dist/HMM.min.js",
   "description": "HMM implementation absed on Viterbi alghoritms",
   "repository": {

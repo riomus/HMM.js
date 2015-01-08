@@ -67,7 +67,7 @@ module.exports = function(grunt) {
         './package.json': ['./package.json'],
         './bower.json': ['./bower.json'],
         './README.md': ['./README.md'],
-        './src/main.js': ['./src/main.js'],
+        './src/hmm.js': ['./src/hmm.js'],
         './src/continousHmm.js': ['./src/continousHmm.js'],
         './src/multiGestureHMM.js': ['./src/multiGestureHMM.js']
       }
