@@ -1,6 +1,6 @@
 # HMM.js
 
-HMM implementation absed on Viterbi alghoritms
+HMM implementation based on Viterbi alghoritms
 
 ## About
 
